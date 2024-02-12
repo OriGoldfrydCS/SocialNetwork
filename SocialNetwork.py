@@ -9,30 +9,31 @@ from User import User
 
 class SocialNetwork:
     # Data members
-    _instance = None            # Class variable to store a singleton instance for network
-    _is_first_instance = True   # Flag to check if the instance is being created for the first time
+    _name = None      # Class variable to store the network's name
+    _instance = None  # Class variable to store the singleton instance of the network
 
-    # A constructor
+    # A private constructor
+    def __init__(self, name):
+        self._name = name    # Set the social network's name
+        self.users = {}      # Initialize a dictionary to store users
+
+    # A constructor to ensure a singleton instance for Social Network
     def __new__(cls, name):
-        if not cls._instance:
-            # Create a new instance
+        # Establish a network only if no other instance already exists
+        if cls._instance is None:
             cls._instance = super(SocialNetwork, cls).__new__(cls)
-            # Initialize the instance
-            cls.name = name  # Set the network name
-            cls.users = {}                  # Initialize a dictionary to store users
-            cls._is_first_instance = True   # Mark as initialized
-            print(f"The social network {cls.name} was created!")  # Print creation message
+            cls._instance.__init__(name)
+            print(f"The social network {name} was created!")  # Print message about establishment of social network
         return cls._instance
 
     # Methods
-
     # This method handles the registration process of a new user to the social network
     def sign_up(self, username, password):
         if username in self.users:         # Check if the username already exists
             print(f"Username '{username}' is already taken.")
             return None
         if not (4 <= len(password) <= 8):  # Check password validity
-            print("Password must include between 4 and 8 characters.")
+            print("Password must include 4 to 8 characters.")
             return None
 
         new_user = User(username, password)
@@ -56,9 +57,11 @@ class SocialNetwork:
             user.set_connected(False)
             print(f"{username} disconnected")
 
-    # This method return the Social Network and the users registered
+    # Getter
+
+    # This method return a string of the Social Network and the users registered
     def __str__(self):
-        result = self.name + " social network:\n"
+        result = self._name + " social network:"
         for value in self.users.values():
-            result += f"{value.__str__()}\n"
+            result += f"\n{value.__str__()}"
         return result

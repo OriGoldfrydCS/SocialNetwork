@@ -9,6 +9,6 @@ class TextPost(Post):
         super().__init__(user)
         self.content = content
 
-    # This method returns the user and the post shared
+    # This method returns a string of the user and the post shared
     def __str__(self):
         return f"{self.user.username} published a post:\n\"{self.content}\"\n"

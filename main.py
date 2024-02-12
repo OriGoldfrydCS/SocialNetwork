@@ -1,8 +1,10 @@
 from SocialNetwork import SocialNetwork
 
+
 def main():
     # Creating the network
     network = SocialNetwork("Twitter")
+    network1 = SocialNetwork("Roni")
     print()
 
     # Creating users
@@ -29,14 +31,13 @@ def main():
     p1 = u1.publish_post("Text", "In 1492, Christopher Columbus set sail,\n"
                                  "hoping to find a westward route to Asia, but instead,\n"
                                  "he discovered the Americas, changing the course of history forever.")
-
     # Creating image post
     p2 = u4.publish_post("Image", 'image1.jpg')
 
     # Creating sale post
     p3 = u3.publish_post("Sale", "Toyota prius 2012", 42000, "Haifa")
 
-    # # Creating likes and comments
+    # Creating likes and comments
     p2.like(u4)
     p1.like(u4)
     p1.like(u2)
@@ -48,11 +49,11 @@ def main():
     p1.comment(u5, "A pivotal moment")
     p3.comment(u2, "Exorbitant price")
     print()
-    #
+
     # Price reduction of the product for sale
     p3.discount(10, "pass3")
     print()
-    #
+
     # more likes and comments
     p3.like(u2)
     p3.comment(u2, "Can you give me your phone number?")
@@ -95,7 +96,7 @@ def main():
     print()
 
     # Network printing
-    print(network)
+    print(network, end='')
 
 
 if __name__ == '__main__':

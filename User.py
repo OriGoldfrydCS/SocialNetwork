@@ -8,29 +8,35 @@ class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.is_connected = False  # A boolean flag -> connected (true) or disconnected (false)
-        self.followers = []  # A list that stores other users that follow this user
-        self.following = []  # A list that stores users this user is following
-        self.posts = []      # A list that stores user's posts
-        self.notifications = []  # A list that stores string notifications for the user
+        self.is_connected = False   # A boolean flag -> connected (true) or disconnected (false)
+        self.followers = []         # A list that stores other users that follow this user
+        self.following = []         # A list that stores users this user is following
+        self.posts = []             # A list that stores user's posts
+        self.notifications = []     # A list that stores string notifications for the user
 
     # This method enables a user to follow other user
     def follow(self, other_user):
-        if self == other_user:
-            return
-        if other_user.username not in self.following:
-            self.following.append(other_user)
-            other_user.followers.append(self)
-            print(f"{self.username} started following {other_user.username}")  # Print follow  message
+        if self.is_connected:           # A user can follow other user only when he is logged in
+            if self == other_user:      # A user cannot follow himself
+                return
+            if other_user.username not in self.following:  # A user can follow a user who is not in his following list
+                self.following.append(other_user)
+                other_user.followers.append(self)
+                print(f"{self.username} started following {other_user.username}")  # Print follow  message
 
     # This method enables a user to unfollow other user
     def unfollow(self, other_user):
-        if other_user in self.following:
-            self.following.remove(other_user)  # Remove other_user from this user's following list
-            other_user.followers.remove(self)  # Remove this user from other_user's followers list
-            print(f"{self.username} unfollowed {other_user.username}")
-        else:
-            print(f"{self.username} is not following {other_user.username}")
+        if self.is_connected:           # A user can unfollow other user only when he is logged in
+            if self == other_user:      # A user cannot unfollow himself
+                return
+            if other_user in self.following:       # A user can unfollow a user who is already in his following list
+                self.following.remove(other_user)  # Remove other_user from this user's following list
+                other_user.followers.remove(self)  # Remove this user from other_user's followers list
+                print(f"{self.username} unfollowed {other_user.username}")
+            else:
+                print(f"{self.username} is not following {other_user.username}")
+        else:                           # The user is not connected -> return nothing
+            return
 
     # This method add a notification to the user's list
     def get_notification(self, msg):
@@ -38,18 +44,15 @@ class User:
 
     # This method enables a user to publish a post of a specified type
     def publish_post(self, post_type, *args):
-        post = PostFactory.create_post(post_type, self, *args)
-        self.posts.append(post)
-        for user in self.followers:
-            user.get_notification(f"{self.username} has a new post")
-        print(post)
-        return post
-
-
-    # This method returns the user details
-    def __str__(self):
-        return "User name: " + self.username + ", Number of posts: " + str(len(self.posts)) \
-               + ", Number of followers: " + str(len(self.followers))
+        if self.is_connected:           # A user can unfollow other user only when he is logged in
+            post = PostFactory.create_post(post_type, self, *args)  # Create the specific post with PostFactory
+            self.posts.append(post)                                       # Append the post to the user post's list
+            for user in self.followers:
+                user.get_notification(f"{self.username} has a new post")  # Send notifications to all user's followers
+            print(post)                                                   # That implements observer design pattern
+            return post
+        else:                           # The user is not connected -> return nothing
+            return
 
     # This method prints the user list notifications
     def print_notifications(self):
@@ -57,11 +60,17 @@ class User:
         for notification in self.notifications:
             print(notification)
 
-    def set_connected(self, connected):
-        self.is_connected = connected
+    # This method changes the user's connection mode
+    def set_connected(self, mode):
+        self.is_connected = mode
 
-
-    def __eq__(self , other):
+    # This method compares two users and returns true in case of identical objects; otherwise, false
+    def __eq__(self, other):
         if isinstance(other, User):
             return self.username == other.username
         return False
+
+    # This method returns the user details
+    def __str__(self):
+        return "User name: " + self.username + ", Number of posts: " + str(len(self.posts)) \
+            + ", Number of followers: " + str(len(self.followers))
