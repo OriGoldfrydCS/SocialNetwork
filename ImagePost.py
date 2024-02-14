@@ -7,7 +7,7 @@ import matplotlib.image as mpimg
 class ImagePost(Post):
 
     # A constructor for ImagePost (that uses his parent constructor)
-    def __init__(self,user,image_name):
+    def __init__(self, user, image_name):
         super().__init__(user)
         self.image_name = image_name
 

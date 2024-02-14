@@ -5,6 +5,7 @@ from TextPost import TextPost
 
 # This is a post factory for 3-types of posts: TextPost, ImagePost and SalePost
 class PostFactory(type):
+
     @staticmethod
     def create_post(post_type, user, *args):
         if post_type == "Text":

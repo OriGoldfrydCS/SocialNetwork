@@ -9,22 +9,18 @@ from User import User
 
 class SocialNetwork:
     # Data members
+    __instance = None  # Class variable to store the singleton instance of the network
     _name = None      # Class variable to store the network's name
-    _instance = None  # Class variable to store the singleton instance of the network
 
-    # A private constructor
-    def __init__(self, name):
-        self._name = name    # Set the social network's name
-        self.users = {}      # Initialize a dictionary to store users
-
-    # A constructor to ensure a singleton instance for Social Network
+    # A private constructor to ensure a singleton instance for Social Network
     def __new__(cls, name):
         # Establish a network only if no other instance already exists
-        if cls._instance is None:
-            cls._instance = super(SocialNetwork, cls).__new__(cls)
-            cls._instance.__init__(name)
+        if cls.__instance is None:
+            cls.__instance = super(SocialNetwork, cls).__new__(cls)
+            cls._name = name
+            cls.users = {}  # Initialize a dictionary to store users
             print(f"The social network {name} was created!")  # Print message about establishment of social network
-        return cls._instance
+        return cls.__instance
 
     # Methods
     # This method handles the registration process of a new user to the social network
@@ -38,7 +34,7 @@ class SocialNetwork:
 
         new_user = User(username, password)
         self.users[username] = new_user                 # Make sure to add the new_user to self.users
-        self.users[username].set_connected(True)        # Correctly call log_in with username and password
+        self.users[username].set_connected()            # Correctly call log_in with username and password
         new_user.network = self                         # Set the network reference in the User object
 
         return new_user
@@ -46,15 +42,15 @@ class SocialNetwork:
     # This method handles the connect process of a user to the social network
     def log_in(self, username, password):
         user = self.users[username]
-        if user:
-            user.set_connected(True)
+        if user and not user.is_connected:
+            user.set_connected()
             print(f"{username} connected")
 
     # This method handles the connect process of a user to the social network
     def log_out(self, username):
         user = self.users[username]
-        if user:
-            user.set_connected(False)
+        if user and user.is_connected:
+            user.set_disconnected()
             print(f"{username} disconnected")
 
     # Getter

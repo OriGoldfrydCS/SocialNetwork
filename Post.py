@@ -6,27 +6,33 @@ class Post(ABC):
 
     # A constructor for generic post
     def __init__(self, user):
-        self.user = user    # The user who created the post
-        self.likes = 0      # Number of likes the post has received
-        self.comments = []  # List of comments on the post
+        self.user = user        # The user who created the post
+        self.likes = 0          # Number of likes a post has received
+        self.likes_list = []    # List that sores the users that like a post
+        self.comments = []      # List of comments on a post
 
     # A method that adds a like to a post (a user can like his own post but will not receive a notification on his act)
     def like(self, the_user):
-        self.add_like()
-        if self.user is not the_user:   # force that a user will not receive a notification on his own act
-            self.user.get_notification(f"{the_user.username} liked your post")
-            print(f"notification to {self.user.username}: {the_user.username} liked your post")
+        if the_user.username not in self.likes_list:   # a user cannot like a post twice or more
+            self.add_like()                            # increment the likes on a post
+            self.likes_list.append(the_user.username)  # Track the users like the post to prevent double-likes
+            if self.user is not the_user:   # force that a user will not receive a notification on his own act
+                self.user.update(f"{the_user.username} liked your post")
+                print(f"notification to {self.user.username}: {the_user.username} liked your post")
+            else:
+                pass                       # The user likes his own post -> return nothing with no notification msg
+        # A user tries to like a post twice or more
         else:
-            return                       # The user likes his own post -> return nothing with no notification msg
+            pass
 
     # A method that adds a comment to a post
     def comment(self, the_user, comment):
         self.add_comment(comment)
         if self.user is not the_user:   # force that a user will not receive a notification on his own act
-            self.user.get_notification(f"{the_user.username} commented on your post");
+            self.user.update(f"{the_user.username} commented on your post");
             print(f"notification to {self.user.username}: {the_user.username} commented on your post: {comment}")
         else:
-            return                      # The user comments on his own post -> return nothing with no notification msg
+            pass              # The user comments on his own post -> return nothing with no notification msg
 
     # A method that increments the number of likes for a post
     def add_like(self):
@@ -39,6 +45,6 @@ class Post(ABC):
     # Enforces subclasses to implement toString method, since a Post is not an object in his abstract form
     @abstractmethod
     def __str__(self):
-        return
+        pass
 
-
+    # Getters for encapsulating the internal data members of that Post object
