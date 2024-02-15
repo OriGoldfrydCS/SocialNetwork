@@ -1,13 +1,13 @@
 from abc import ABC
-
 from NotifyManager import Sender, Member
 from PostFactory import PostFactory
 
 
+# This class represents a user object
 class User(Sender, Member, ABC):
 
     # A constructor for new user
-    def __init__(self, username, password):
+    def __init__(self, username, password, network=None):
         super().__init__()          # Initialize the Sender part of User (means the follower list, means subscribers)
         self.username = username
         self.password = password
@@ -15,24 +15,35 @@ class User(Sender, Member, ABC):
         self.following = []         # A list that stores users this user is following (means subscriptions)
         self.posts = []             # A list that stores user's posts
         self.notifications = []     # A list that stores string notifications for the user
+        self.network = network      # Store the SocialNetwork reference
 
     # This method enables a user to follow other user
     def follow(self, other_user):
-        # Conditions to follow other user: (1) A user can follow other user only when he is logged in;
-        # (2) A user cannot follow himself; and (3) A user can follow a user other who is not in his following list
-        if self.is_connected and self != other_user and other_user not in self.following:
+        # a user can follow other_user - (1) if both of them registered to the network; and
+        #                                (2) only when the user is logged in; and
+        #                                (3) A user cannot follow himself; and
+        #                                (4) A user can follow a user other who is not in his following list
+        if self.username in self.network.users and other_user.username in self.network.users \
+                and self.is_connected and self != other_user and other_user not in self.following:
             self.following.append(other_user)   # add other_user from this user's following list
             other_user.register(self)           # Subscribe this user to get notifications from the other user
             print(f"{self.username} started following {other_user.username}")
+        else:
+            return
 
     # This method enables a user to unfollow other user
     def unfollow(self, other_user):
-        # Conditions to unfollow other user: (1) A user can unfollow other user only when he is logged in;
-        # (2) A user cannot unfollow himself; and (3) A user can unfollow a user who is in his following list
-        if self.is_connected and other_user in self.following:
+        # a user can unfollow other_user - (1) if both of them registered to the network; and
+        #                                  (2) only when the user is logged in; and
+        #                                  (3) A user cannot unfollow himself; and
+        #                                  (4) A user can unfollow a user other who is not in his following list
+        if self.username in self.network.users and other_user.username in self.network.users \
+                and self.is_connected and self != other_user and other_user in self.following:
             self.following.remove(other_user)   # Remove other_user from this user's following list
             other_user.unregister(self)         # Subscribe this user to get notifications from the other user
             print(f"{self.username} unfollowed {other_user.username}")
+        else:
+            return
 
     # This method add a notification to the user's list (implement Member's abstract method)
     def update(self, event):
@@ -40,7 +51,8 @@ class User(Sender, Member, ABC):
 
     # This method enables a user to publish a post of a specified type
     def publish_post(self, post_type, *args):
-        if self.is_connected:           # A user can unfollow other user only when he is logged in
+        # A user can publish a post only when he is registered and logged in
+        if self.is_connected and self.username in self.network.users:
             post = PostFactory.create_post(post_type, self, *args)  # Create the specific post with PostFactory
             self.posts.append(post)                           # Append the post to the user post's list
             self.notify(f"{self.username} has a new post")    # Send notifications to all user's followers (subscribers)
