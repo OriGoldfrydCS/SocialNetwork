@@ -1,21 +1,20 @@
-from abc import ABC
 from NotifyManager import Sender, Member
 from PostFactory import PostFactory
 
 
 # This class represents a user object
-class User(Sender, Member, ABC):
+class User(Sender, Member):
 
     # A constructor for new user
     def __init__(self, username, password, network=None):
         super().__init__()          # Initialize the Sender part of User (means the follower list, means subscribers)
         self.username = username
         self.password = password
+        self.network = network      # Store the SocialNetwork reference
         self.is_connected = False   # A boolean flag -> connected (true) or disconnected (false)
         self.following = []         # A list that stores users this user is following (means subscriptions)
         self.posts = []             # A list that stores user's posts
         self.notifications = []     # A list that stores string notifications for the user
-        self.network = network      # Store the SocialNetwork reference
 
     # This method enables a user to follow other user
     def follow(self, other_user):
@@ -29,7 +28,7 @@ class User(Sender, Member, ABC):
             other_user.register(self)           # Subscribe this user to get notifications from the other user
             print(f"{self.username} started following {other_user.username}")
         else:
-            return
+            raise ValueError("The user cannot follow that other user")
 
     # This method enables a user to unfollow other user
     def unfollow(self, other_user):
@@ -43,9 +42,9 @@ class User(Sender, Member, ABC):
             other_user.unregister(self)         # Subscribe this user to get notifications from the other user
             print(f"{self.username} unfollowed {other_user.username}")
         else:
-            return
+            raise ValueError("The user cannot unfollow that other user")
 
-    # This method add a notification to the user's list (implement Member's abstract method)
+    # This method add a notification to the user's list
     def update(self, event):
         self.notifications.append(event)
 
@@ -59,7 +58,7 @@ class User(Sender, Member, ABC):
             print(post)
             return post
         else:                           # The user is not connected -> return nothing
-            pass
+            raise ValueError("The user cannot publish that post")
 
     # This method prints the user list notifications
     def print_notifications(self):

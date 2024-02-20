@@ -32,6 +32,8 @@ class SalePost(Post):
         if self.availability is True:
             return f"{self.user.username} posted a product for sale:\n" \
                    f"For sale! {self.content}, price: {self.price}, pickup from: {self.location}\n"
-        else:
+        elif self.availability is False:
             return f"{self.user.username} posted a product for sale:\n" \
                    f"Sold! {self.content}, price: {self.price}, pickup from: {self.location}\n"
+        else:
+            raise ValueError("Something went wrong...")

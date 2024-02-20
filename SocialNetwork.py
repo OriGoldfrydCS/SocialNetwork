@@ -17,24 +17,25 @@ class SocialNetwork:
         # Establish a network only if no other instance already exists
         if cls.__instance is None:
             cls.__instance = super(SocialNetwork, cls).__new__(cls)
-            cls.__instance.__initialized = False    # A flag to prevent enter  __init__  after one instance creation
+            cls.__instance.__initialized = False  # A flag to prevent enter  __init__  after one instance creation
         return cls.__instance
 
+    # A constructor to initiate the data members of the singleton
     def __init__(self, name):
         if not self.__initialized:
-            self._name = name                                   # A variable to store the instance name
-            self.users = {}                                     # Initialize a dictionary to store users
-            print(f"The social network {name} was created!")    # Print message about establishment of social network
+            self._name = name  # A variable to store the instance name
+            self.users = {}    # Initialize a dictionary to store users
+            print(f"The social network {name} was created!")  # Print message about establishment of social network
             self.__initialized = True
 
     # Methods
     # This method handles the registration process of a new user to the social network
     def sign_up(self, username, password):
         if username in self.users:  # Check if the username already exists
-            print(f"Username '{username}' is already taken.")
+            raise ValueError(f"Username '{username}' is already taken.")
             return None
         if not (4 <= len(password) <= 8):  # Check password validity
-            print("Password must include 4 to 8 characters.")
+            raise ValueError("Password must include 4 to 8 characters.")
             return None
 
         new_user = User(username, password, self)
@@ -50,6 +51,8 @@ class SocialNetwork:
         if user and not user.is_connected:
             user.set_connected()
             print(f"{username} connected")
+        else:
+            raise ValueError("The user cannot log in while he/she is already connected")
 
     # This method handles the connect process of a user to the social network
     def log_out(self, username):
@@ -57,8 +60,8 @@ class SocialNetwork:
         if user and user.is_connected:
             user.set_disconnected()
             print(f"{username} disconnected")
-
-    # Getter
+        else:
+            raise ValueError("The user cannot log out while he/she is already disconnected")
 
     # This method return a string of the Social Network and the users registered
     def __str__(self):
@@ -66,6 +69,3 @@ class SocialNetwork:
         for value in self.users.values():
             result += f"\n{value.__str__()}"
         return result
-
-    def get_users(self):
-        return self.users

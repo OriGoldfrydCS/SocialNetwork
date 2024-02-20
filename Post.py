@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from SocialNetwork import User
 
 
 # This class represents an abstract Post object
@@ -6,6 +7,8 @@ class Post(ABC):
 
     # A constructor for generic post
     def __init__(self, user):
+        if user is None or not isinstance(user, User):
+            raise ValueError("Invalid user")
         self.user = user  # The user who created the post
         self.likes = 0  # Number of likes a post has received
         self.likes_list = []  # List that sores the users that like a post
@@ -27,7 +30,7 @@ class Post(ABC):
                 pass  # The user likes his own post -> return nothing with no notification msg
         # A user tries to like a post twice or more
         else:
-            pass
+            raise ValueError("This user cannot like that post")
 
     # A method that adds a comment to a post
     def comment(self, the_user, comment):
@@ -40,6 +43,8 @@ class Post(ABC):
                 print(f"notification to {self.user.username}: {the_user.username} commented on your post: {comment}")
             else:
                 pass  # The user comments on his own post -> return nothing with no notification msg
+        else:
+            raise ValueError("This user cannot comment on that post")
 
     # A method that increments the number of likes for a post
     def add_like(self):
