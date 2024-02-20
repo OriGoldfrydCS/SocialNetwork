@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from SocialNetwork import User
 
 
 # This class represents an abstract Post object
@@ -7,7 +6,7 @@ class Post(ABC):
 
     # A constructor for generic post
     def __init__(self, user):
-        if user is None or not isinstance(user, User):
+        if user is None:
             raise ValueError("Invalid user")
         self.user = user  # The user who created the post
         self.likes = 0  # Number of likes a post has received
@@ -28,9 +27,15 @@ class Post(ABC):
                 print(f"notification to {self.user.username}: {the_user.username} liked your post")
             else:
                 pass  # The user likes his own post -> return nothing with no notification msg
-        # A user tries to like a post twice or more
+        # Exceptions
         else:
-            raise ValueError("This user cannot like that post")
+            if the_user.username in self.likes_list:  # A user tries to like a post twice or more
+                raise ValueError("A user cannot like that post")
+            if the_user.username not in the_user.network.users:
+                raise ValueError("The user is not registered to the network")
+            if not the_user.is_connected:
+                raise ValueError("The user is disconnected")
+        return
 
     # A method that adds a comment to a post
     def comment(self, the_user, comment):
@@ -43,8 +48,15 @@ class Post(ABC):
                 print(f"notification to {self.user.username}: {the_user.username} commented on your post: {comment}")
             else:
                 pass  # The user comments on his own post -> return nothing with no notification msg
+        # Exceptions
         else:
-            raise ValueError("This user cannot comment on that post")
+            if the_user.username in self.likes_list:  # A user tries to comment on a post twice or more
+                raise ValueError("A user cannot comment on that post")
+            if the_user.username not in the_user.network.users:
+                raise ValueError("The user is not registered to the network")
+            if not the_user.is_connected:
+                raise ValueError("The user is disconnected")
+        return
 
     # A method that increments the number of likes for a post
     def add_like(self):

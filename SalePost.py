@@ -1,3 +1,4 @@
+import string
 from Post import Post
 
 
@@ -6,6 +7,11 @@ class SalePost(Post):
 
     # A constructor
     def __init__(self, user, content, price, location, availability=True):
+        if price < 0:
+            raise ValueError("Price cannot be negative")
+        if content is None:
+            raise ValueError("Sale post cannot be empty")
+
         super().__init__(user)
         self.content = content              # A variable that represents item for sale
         self.price = price                  # A variable that represents the item's price
@@ -14,6 +20,9 @@ class SalePost(Post):
 
     # This method calculates the discount given
     def discount(self, percentage, password):
+        if not 0 <= percentage <= 100:
+            raise ValueError("Discount percentage must by between 0 to 100")
+
         if self.user.password == password:
             self.price *= (1 - percentage / 100)
             print(f"Discount on {self.user.username} product! the new price is: {str(self.price)}")

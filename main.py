@@ -4,7 +4,6 @@ from SocialNetwork import SocialNetwork
 def main():
     # Creating the network
     network = SocialNetwork("Twitter")
-
     print()
 
     # Creating users
@@ -33,11 +32,9 @@ def main():
                                  "he discovered the Americas, changing the course of history forever.")
     # Creating image post
     p2 = u4.publish_post("Image", 'image1.jpg')
-    p4 = u5.publish_post("Image", 'image2.jpg')
 
     # Creating sale post
     p3 = u3.publish_post("Sale", "Toyota prius 2012", 42000, "Haifa")
-    p5 = u2.publish_post("Sale", "Toyota prius 2012", -2, "Haifa")
 
     # Creating likes and comments
     p2.like(u4)
@@ -70,9 +67,6 @@ def main():
 
     # Displaying the image of the post
     p2.display()
-    print()
-
-    p4.display()
     print()
 
     p2.comment(u5, "Amazing picture!")

@@ -24,7 +24,7 @@ class SocialNetwork:
     def __init__(self, name):
         if not self.__initialized:
             self._name = name  # A variable to store the instance name
-            self.users = {}    # Initialize a dictionary to store users
+            self.users = {}  # Initialize a dictionary to store users
             print(f"The social network {name} was created!")  # Print message about establishment of social network
             self.__initialized = True
 
@@ -33,10 +33,8 @@ class SocialNetwork:
     def sign_up(self, username, password):
         if username in self.users:  # Check if the username already exists
             raise ValueError(f"Username '{username}' is already taken.")
-            return None
         if not (4 <= len(password) <= 8):  # Check password validity
             raise ValueError("Password must include 4 to 8 characters.")
-            return None
 
         new_user = User(username, password, self)
         self.users[username] = new_user  # Make sure to add the new_user to self.users
@@ -47,6 +45,9 @@ class SocialNetwork:
 
     # This method handles the connect process of a user to the social network
     def log_in(self, username, password):
+        if username not in self.users:
+            raise ValueError(f"User '{username}' not found.")
+
         user = self.users[username]
         if user and not user.is_connected:
             user.set_connected()
@@ -56,6 +57,9 @@ class SocialNetwork:
 
     # This method handles the connect process of a user to the social network
     def log_out(self, username):
+        if username not in self.users:
+            raise ValueError(f"User '{username}' not found.")
+
         user = self.users[username]
         if user and user.is_connected:
             user.set_disconnected()

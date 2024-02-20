@@ -10,8 +10,10 @@ class Sender(ABC):
 
     # "Register" a follower to the followers list
     def register(self, follower):
-        if not isinstance(follower, Member):
+        if not isinstance(follower, Member) and self in self._followers:
             raise ValueError("Follower must implement Member interface")
+        if self in self._followers:
+            raise ValueError("Follower is already int the followers list")
         self._followers.append(follower)
 
     # "Unregister" a follower from the followers list
