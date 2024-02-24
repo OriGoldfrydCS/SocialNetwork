@@ -6,9 +6,11 @@ class TextPost(Post):
 
     # A constructor
     def __init__(self, user, content):
+        # Check if the content is empty
         if content is None:
             raise ValueError("Text post cannot be empty")
 
+        # If valid input -> create an object
         super().__init__(user)
         self.content = content
 

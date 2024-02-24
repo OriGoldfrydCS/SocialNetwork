@@ -8,13 +8,13 @@ from User import User
 # 3) A user can edit an activity only when he is connected (alerts can be received when the user is not connected).
 # 4) It is forbidden to create more than one network while the program is running.
 class SocialNetwork:
-    # Data members
-    __instance = None  # Class variable to store the singleton instance of the network
-    _name = None  # Class variable to store the network's name
+
+    __instance = None   # Class variable to store the singleton instance of the network
+    _name = None        # Class variable to store the network's name
 
     # A private constructor to ensure a singleton instance for Social Network
     def __new__(cls, name):
-        # Establish a network only if no other instance already exists
+        # Establish a network only if no other instance already established
         if cls.__instance is None:
             cls.__instance = super(SocialNetwork, cls).__new__(cls)
             cls.__instance.__initialized = False  # A flag to prevent enter  __init__  after one instance creation
@@ -23,17 +23,19 @@ class SocialNetwork:
     # A constructor to initiate the data members of the singleton
     def __init__(self, name):
         if not self.__initialized:
-            self._name = name  # A variable to store the instance name
-            self.users = {}  # Initialize a dictionary to store users
-            print(f"The social network {name} was created!")  # Print message about establishment of social network
+            self._name = name   # A variable to store the instance name
+            self.users = {}     # Initialize a dictionary to store users
+            print(f"The social network {name} was created!")  # Print a message about establishment of social network
             self.__initialized = True
 
     # Methods
     # This method handles the registration process of a new user to the social network
     def sign_up(self, username, password):
-        if username in self.users:  # Check if the username already exists
+        # Check if the username already exists
+        if username in self.users:
             raise ValueError(f"Username '{username}' is already taken.")
-        if not (4 <= len(password) <= 8):  # Check password validity
+        # Check password validity
+        if not (4 <= len(password) <= 8):
             raise ValueError("Password must include 4 to 8 characters.")
 
         new_user = User(username, password, self)
@@ -45,6 +47,7 @@ class SocialNetwork:
 
     # This method handles the connect process of a user to the social network
     def log_in(self, username, password):
+        # Check if the username is a user in the network
         if username not in self.users:
             raise ValueError(f"User '{username}' not found.")
 
@@ -57,6 +60,7 @@ class SocialNetwork:
 
     # This method handles the connect process of a user to the social network
     def log_out(self, username):
+        # Check if the username is a user in the network
         if username not in self.users:
             raise ValueError(f"User '{username}' not found.")
 

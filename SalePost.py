@@ -7,11 +7,15 @@ class SalePost(Post):
 
     # A constructor
     def __init__(self, user, content, price, location, availability=True):
+        # Check if price is less than zero or the content/location is empty
         if price < 0:
             raise ValueError("Price cannot be negative")
         if content is None:
-            raise ValueError("Sale post cannot be empty")
+            raise ValueError("Sale post cannot be empty with sale's details")
+        if location is None:
+            raise ValueError("Sale post cannot be empty with location")
 
+        # If valid input -> create an object
         super().__init__(user)
         self.content = content              # A variable that represents item for sale
         self.price = price                  # A variable that represents the item's price

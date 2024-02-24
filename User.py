@@ -7,18 +7,19 @@ class User(Sender, Member):
 
     # A constructor for new user
     def __init__(self, username, password, network="Twitter"):
-        # Initial check for validity
+        # Check for user validity
         if username is None or password is None or network is None:
             raise ValueError("Username, password, and network cannot be None")
 
+        # If valid input -> create an object
         super().__init__()  # Initialize the Sender part of User (means the follower list, means subscribers)
         self.username = username
         self.password = password
-        self.network = network  # Store the SocialNetwork reference
-        self.is_connected = False  # A boolean flag -> connected (true) or disconnected (false)
-        self.following = []  # A list that stores users this user is following (means subscriptions)
-        self.posts = []  # A list that stores user's posts
-        self.notifications = []  # A list that stores string notifications for the user
+        self.network = network      # Store the SocialNetwork reference
+        self.is_connected = False   # A boolean flag -> connected (true) or disconnected (false)
+        self.following = []         # A list that stores users this user is following (means subscriptions)
+        self.posts = []             # A list that stores user's posts
+        self.notifications = []     # A list that stores string notifications for the user
 
     # This method enables a user to follow other user
     def follow(self, other_user):

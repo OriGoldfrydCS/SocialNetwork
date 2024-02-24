@@ -10,16 +10,16 @@ class Sender(ABC):
 
     # "Register" a follower to the followers list
     def register(self, follower):
-        if not isinstance(follower, Member) and self in self._followers:
-            raise ValueError("Follower must implement Member interface")
         if self in self._followers:
-            raise ValueError("Follower is already int the followers list")
+            raise ValueError("The follower must implement Member interface")
+        if self in self._followers:
+            raise ValueError("The follower is already in the followers list")
         self._followers.append(follower)
 
     # "Unregister" a follower from the followers list
     def unregister(self, follower):
         if follower not in self._followers:
-            raise ValueError("Follower not found in followers list")
+            raise ValueError("The follower does not found in followers list")
         self._followers.remove(follower)
 
     # Notify all followers (subscribers) about an event, means publishing of a post
@@ -27,7 +27,7 @@ class Sender(ABC):
         if event is None:
             raise ValueError("Event cannot be None")
         for follower in self._followers:
-            if follower is not None:        # Additional check for follower validity
+            if follower is not None:        # Check for follower validity
                 follower.update(event)
 
 
