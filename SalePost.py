@@ -33,6 +33,8 @@ class SalePost(Post):
 
     # This method handles a case where an item already sold
     def sold(self, password):
+        if self.user.password != password:
+            raise ValueError("Incorrect password")
         self.availability = False
         print(f"{self.user.username}'s product is sold")
 

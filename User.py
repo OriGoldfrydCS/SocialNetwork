@@ -42,8 +42,8 @@ class User(Sender, Member):
                 raise ValueError("The user is disconnected")
             if self is other_user:
                 raise ValueError("A user cannot unfollow himself")
-            if other_user not in self.following:
-                raise ValueError("A user cannot unfollow other user who is not in his following list")
+            if other_user in self.following:
+                raise ValueError("A user cannot follow a user that already follows")
         return
 
     # This method enables a user to unfollow other user

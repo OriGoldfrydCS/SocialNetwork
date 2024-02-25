@@ -13,19 +13,19 @@ class PostFactory:
 
         if post_type == "Text":
             # Ensure that args contains text content
-            if len(args) < 1:
+            if len(args) != 1:
                 raise ValueError("Text content cannot be empty for TextPost.")
             return TextPost(user, *args)
 
         elif post_type == "Image":
             # Ensure that args contains the image name
-            if len(args) < 1:
+            if len(args) != 1:
                 raise ValueError("ImagePost requires a valid image name.")
             return ImagePost(user, *args)
 
         elif post_type == "Sale":
             # Ensure that args contains all details regarding SalePost
-            if len(args) < 2:
+            if len(args) != 3:
                 raise ValueError("SalePost requires a title and a non-negative price.")
             return SalePost(user, *args)
 

@@ -50,7 +50,8 @@ class SocialNetwork:
         # Check if the username is a user in the network
         if username not in self.users:
             raise ValueError(f"User '{username}' not found.")
-
+        if self.users[username].password != password:
+            raise ValueError(f"Wrong password for user '{username}'.")
         user = self.users[username]
         if user and not user.is_connected:
             user.set_connected()
@@ -76,4 +77,4 @@ class SocialNetwork:
         result = self._name + " social network:"
         for value in self.users.values():
             result += f"\n{value.__str__()}"
-        return result
+        return result + "\n"
